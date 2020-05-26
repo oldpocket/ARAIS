@@ -1,2 +1,2 @@
-# SiSIS
-SiSIS - SIS is Simple IoT Server
+# ARAIS
+ARAIS is a Recursive Acronym for an IoT Server
