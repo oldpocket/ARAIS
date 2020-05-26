@@ -1,0 +1,4 @@
+RewriteEngine on
+
+RewriteRule .* - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteRule . index.php [L]
