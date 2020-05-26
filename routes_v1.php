@@ -26,7 +26,7 @@ $app->get('/auth', function () use ($app) {
     // ($payload, $secret, algorithm, kid)
     $jwt = \Firebase\JWT\JWT::encode($payload, $token->secret, 'HS256', $token->id);
     	
-	$result = ['auth-jwt' => $jwt];
+	$result = ['token' => $jwt];
 	$app->render(200, $result);
 });
 
