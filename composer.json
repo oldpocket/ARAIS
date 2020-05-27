@@ -1,5 +1,5 @@
 {
-    "name": "OldPocket/ARAIS",
+    "name": "oldpocket/arais",
     "type": "project",
     "description": "ARAIS is a simple IoT server for personal or small projects. It can manage devices and sensors, together with its data. All with JWT tokens to preserve the data integrity",
     "keywords": ["iot","server","arduino","jwt"],
