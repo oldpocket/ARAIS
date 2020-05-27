@@ -151,8 +151,39 @@ $app->group('/v1', 'Helper::authorizeForRoute', function () use ($app) {
         })->name('authorizationPermissionRoleUIDRouteUIDPost');          
         
     });
-
+        
     $app->group('/users', function () use ($app) {
+        
+        /**
+        * PUT usersUsernamePasswordPut
+        * Summary: Create a new user in the system
+        * Notes: 
+        * Output-Formats: [application/json]
+        */
+        $app->put('/:username/password', function($username) use ($app) {
+        
+            $data = Helper::textBodytToJSON($app);
+        
+            // Looking for the username in the database
+            $token = R::findOne('tokens', 'username = ?', array($username));
+            // Username not found or current password doesn't match
+            if ($token == NULL || !password_verify($data->current_password, $token->password)) {
+                $app->render(401,array(
+                    'error' => TRUE,
+                    'msg'   => 'Username or password does not match',
+                ));
+            }
+            
+            // JWT token secret
+            $token->password = password_hash($data->new_password, PASSWORD_DEFAULT);
+            $token_id = R::store($token);
+
+            // Return the user created
+            $app->render(200,array(
+                'message' => 'ok'
+            ));
+            
+        })->name('usersUsernamePasswordPut');  
         
         /**
         * POST usersUsernamePost
@@ -205,6 +236,7 @@ $app->group('/v1', 'Helper::authorizeForRoute', function () use ($app) {
             ));
             
         })->name('usersUsernamePost');
+          
         
     });
 
