@@ -1,8 +1,8 @@
 {
     "name": "oldpocket/arais",
     "type": "project",
-    "description": "ARAIS is a simple IoT server for personal or small projects. It can manage devices and sensors, together with its data. All with JWT tokens to preserve the data integrity",
-    "keywords": ["iot","server","arduino","jwt"],
+    "description": "ARAIS is a simple IoT server for personal use or small projects. It can manage devices and sensors, together with its data. All with JWT tokens to preserve the data integrity. The server provide REST calls, to make it simple for integration.",
+    "keywords": ["iot","server", "devices", "sensors", "arduino", "api", "rest", "jwt"],
     "homepage": "http://oldpocket.com",
     "license": "MIT",
     "authors": [
