@@ -153,6 +153,30 @@ $app->group('/v1', 'Helper::authorizeForRoute', function () use ($app) {
     });
         
     $app->group('/users', function () use ($app) {
+    
+        /**
+        * Get usersGet
+        * Summary: Create a new user in the system
+        * Notes: 
+        * Output-Formats: [application/json]
+        */
+        $app->get('/', function() use ($app) {
+        
+            $data = R::findAll('users');
+            
+            $return = array();
+            foreach ($data as $value) {
+                unset($value->id);
+                unset($value->tokens_id);
+                
+                array_push($return, $value);
+            }
+            
+            $app->render(200,array(
+                'users' => $return,
+            ));          
+            
+        })->name('usersGet');    
         
         /**
         * PUT usersUsernamePasswordPut
@@ -184,6 +208,33 @@ $app->group('/v1', 'Helper::authorizeForRoute', function () use ($app) {
             ));
             
         })->name('usersUsernamePasswordPut');  
+
+        /**
+        * Get usersUsernameGet
+        * Summary: Create a new user in the system
+        * Notes: 
+        * Output-Formats: [application/json]
+        */
+        $app->get('/:username', function($username) use ($app) {
+            
+            // Checking if we have the username registered
+            $token = R::findOne('tokens', 'username = ?', array($username));
+            if ($token == NULL) {
+                $app->render(404,array(
+                    'error' => TRUE,
+                    'msg'   => 'Username not found: ' . $username,
+                ));
+            }
+            $user = reset($token->ownUsers);
+            
+            unset($user->id);
+            unset($user->tokens_id);
+            // Return the device created
+            $app->render(200,array(
+                'users' => array($user)
+            ));
+            
+        })->name('usersUsernameGet');
         
         /**
         * POST usersUsernamePost
@@ -201,8 +252,8 @@ $app->group('/v1', 'Helper::authorizeForRoute', function () use ($app) {
             }
         
             // Checking if we have the username registered
-            $route = R::findOne('users', 'username = ?', array($username));
-            if ($route != NULL) {
+            $token = R::findOne('users', 'username = ?', array($username));
+            if ($token != NULL) {
                 $app->render(409,array(
                     'error' => TRUE,
                     'msg'   => 'Duplicated username: ' . $username,
@@ -229,7 +280,8 @@ $app->group('/v1', 'Helper::authorizeForRoute', function () use ($app) {
             $role->ownTokens[] = $token;
             R::store($role);
             
-            unset($user->password);
+            unset($user->id);
+            unset($user->tokens_id);
             // Return the device created
             $app->render(200,array(
                 'users' => array($user)

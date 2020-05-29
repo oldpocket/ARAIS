@@ -21,6 +21,7 @@ class Helper {
             $app->render(403,array(
                 'error' => TRUE,
                 'msg'   => 'You are not allowed to call this route',
+                'route' => $route
             ));
         }
         
