@@ -242,7 +242,7 @@ class QueryBuilder extends DBConnection
         }
 
         // DELETE FROM {table} <JOIN> <USING> <WHERE>
-        // junta o comando
+        // merge the parts of the command
         $sql = implode(' ', $command);
 
         return $this->executeDelete($sql, $filters);

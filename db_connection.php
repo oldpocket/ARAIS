@@ -3,8 +3,18 @@
 use \Exception;
 
 /**
-* Class Connection
-* @package Hero
+* Class DBConnection 
+* 
+* Abstract the database connection and low level database
+* library calls for the query builder layer. If one decides to change the 
+* database type, this should be the only place to change.
+*
+* @author      Fabio Andreozzi Godoy <fabio.godoy@oldpocket.com>
+* @copyright   2019-2020 Fabio Godoy
+* @link        https://github.com/oldpocket/ARAIS
+* @license     https://github.com/oldpocket/ARAIS/blob/master/LICENSE
+* @version     0.5.0
+* @package     ARAIS
 */
 class DBConnection
 {
@@ -24,7 +34,7 @@ class DBConnection
             // The extension of the file is arbitrary.
             $this->db = new SQLite3('iot.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
 
-            // Create a table if it is the first time
+            // ToDo : load external SQL file with all SQL create statements
             $this->db->query('CREATE TABLE IF NOT EXISTS "data" (
                             "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                             "device_uid" VARCHAR,

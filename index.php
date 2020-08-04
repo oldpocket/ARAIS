@@ -5,12 +5,12 @@
  *
  */
 
-// Composer initialization
-require 'vendor/autoload.php';
-// ORM framework - ReadBean doesn't recomment use via composer
-require 'RedBeanPHP/rb.php';   
-// Add our Env Vars - my free-hosting doesn't allow .httaccess SetEnv so I use a .php file
+ // Add our Env Vars - my free-hosting doesn't allow .httaccess SetEnv so I use a .php file
 require '.env.php';            
+// Route handler
+require 'router.php';
+// Basic ORM
+require 'query_buidler.php';   
 
 // Turn PHP error report on screen on-off
 error_reporting(getenv('PHP_ERROR_REPORTING'));
@@ -20,36 +20,30 @@ ini_set('display_errors', getenv('PHP_DISPLAY_ERROS'));
 date_default_timezone_set(getenv('APP_TIME_ZONE'));
 
 /**
- * Step 1: Setup and initialize RedBeanPHP - ORM framework
+ * Step 1: Add the helper classes and route implementation
  *
  */
 
-// Database setup and basic connection
-R::setup(
-    'mysql:host=' . getenv('MYSQL_HOST') . ';dbname=' . getenv('MYSQL_DB'), 
-    getenv('MYSQL_USER'), 
-    getenv('MYSQL_PASSWD')
-);
-
-// PHP file with some data models customizations - used by RedBean
+// PHP file with some data models customizations - used by our ORM
 include 'models.php';
 
 /**
- * Step 2: Helper class with methods required by the application
+ * Step 2: Helper class with methods required by the application.
  *
  */
 include 'helper.php';
 
 /**
- * Step 3: Instantiate our Slim application
+ * Step 3: Instantiate our Router application and add routes to it.
  *
  */
-include 'slim_app.php';
+$router = new Router;
+include 'routes_v1.php';
  
 /**
- * Step 3: Run the Slim application
+ * Step 3: Run the application.
  *
- * This method should be called last. This executes the Slim application
+ * This method should be called last. This executes the Router application
  * and returns the HTTP response to the HTTP client.
  */
-$app->run();
+echo $router($router->method(), $router->uri());
