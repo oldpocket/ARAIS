@@ -35,22 +35,24 @@ class Router {
      */
     private function checkContentType() {
         $type = '';
+        $header = '';
         // GET and DELETE must accept JSON response
         // They don't have content-type (both have empty bodys)
         // so we are checking only Accept header.
         if (in_array($this->method(), array('get', 'delete'))) {
+            $header = 'Accept';
             $type = $this->getHeaderList()['Accept'];
         }
         // POST and PUT must send content-type in JSON format
         // If they can send content-type JSON, we assume they can receive
         // content-type JSON. So we are not checking Accept header here.
         if (in_array($this->method(), array('post', 'put'))) {
+            $header = 'Content-Type';
             $type = $this->getHeaderList()['Content-Type'];
         }
         // Both Accept and Content-Type must be JSON
         if (strcmp($type, 'application/json') !== 0) {
-            http_response_code(400);
-            exit();
+            throw new HttpException(400, "Request header $header missing or not of type application/json");
         }
     }
     
@@ -165,7 +167,8 @@ class Router {
             if (preg_match($route, $uri, $parameters)) {
                 array_shift($parameters);
                 header('Content-Type: application/json');
-                return $this->call($callback, $parameters);
+                echo ($uri);
+                return json_encode($this->call($callback, $parameters));
             }
         }
         return null;

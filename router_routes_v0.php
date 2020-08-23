@@ -15,12 +15,14 @@ $router
         
         $qb = new QueryBuilder();
         
+        // Looking for the user token
         $tokens = $qb
             ->table('tokens')
             ->fields(['id', 'roles_id', 'secret', 'username'])
             ->where(["username = '$auth_user'"])
             ->select();
-        if (count($tokens->values) == 1) 
+        // Each user must have just one token
+        if (count($tokens->values) != 1) 
             throw new HttpException(400, "Duplicated username in the system");
 
         $token = $tokens->values[0];
@@ -38,10 +40,12 @@ $router
             array_push($allowed_routes, $value->routes_id);
         }
 
+        // All user should have at least one route, otherwise he/she/it doesnt 
+        // have what to do in the system
         if (count($allowed_routes) == 0) 
             throw new HttpException(400, "No routes allowed for this user");
         
-        // Preparing the JWT payload
+        // Preparing user's JWT payload
         $timestamp = time();
         $payload = array(
             'username' => $token->username,  // logged in user 
@@ -53,5 +57,7 @@ $router
         // ($payload, $secret, algorithm)
         $jwt = JWTHelper::encode($payload, $token->secret, 'HS256');
         $result = ['token' => $jwt];
-        return json_encode($result);
+
+        // Returning the JWT
+        return $result;
     });

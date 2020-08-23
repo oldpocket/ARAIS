@@ -7,12 +7,12 @@
 
  // Add our Env Vars - my free-hosting doesn't allow .httaccess SetEnv so I use a .php file
 require '.env.php';            
+// HttpException
+require 'http_exception.php';
 // Route handler
 require 'router.php';
 // Basic ORM
 require 'query_builder.php';   
-// HttpException
-require 'http_exception.php';
 
 // Turn PHP error report on screen on-off
 error_reporting(getenv('PHP_ERROR_REPORTING'));
@@ -39,18 +39,17 @@ include 'helper.php';
  * Step 3: Instantiate our Router application and add routes to it.
  *
  */
-
-$router = new Router;
-require 'router_routes_v0.php';
-
-/**
- * Step 4: Run the application.
- *
- * This method should be called last. This executes the Router application
- * and returns the HTTP response to the HTTP client.
- */
-
 try {
+    $router = new Router;
+    require 'router_routes_v0.php';
+
+    /**
+     * Step 4: Run the application.
+     *
+     * This method should be called last. This executes the Router application
+     * and returns the HTTP response to the HTTP client.
+     */
+
     // execute the received method and output the result
     echo $router($router->method(), $router->uri());
 }

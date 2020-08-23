@@ -19,8 +19,7 @@ class HttpException extends \Exception
     /**
      * List of HTTP status codes
      *
-     * From http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-     *
+     * @link From http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
      * @var array
      */
     private $status = array(
@@ -155,16 +154,18 @@ class HttpException extends \Exception
     }
 
     /**
-     * Define a body message.
-     *
-     * @param string $body
+     * Output an error as Http Response
      *
      * @return self
      */
     public function getResponse() {
+        // add all headers to the response
         foreach ($this->headers as $header) header($header);
+        // update the response code if avaliable
         if ($this->code > 0) http_response_code($this->code);
-
+        // set output as JSON
+        header('Content-type:application/json');
+        // write the error body output
         echo json_encode(array(
             'error' => array(
                 'code' => $this->getCode(),
