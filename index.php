@@ -10,7 +10,9 @@ require '.env.php';
 // Route handler
 require 'router.php';
 // Basic ORM
-require 'query_buidler.php';   
+require 'query_builder.php';   
+// HttpException
+require 'http_exception.php';
 
 // Turn PHP error report on screen on-off
 error_reporting(getenv('PHP_ERROR_REPORTING'));
@@ -25,7 +27,7 @@ date_default_timezone_set(getenv('APP_TIME_ZONE'));
  */
 
 // PHP file with some data models customizations - used by our ORM
-include 'models.php';
+//include 'models.php';
 
 /**
  * Step 2: Helper class with methods required by the application.
@@ -37,13 +39,22 @@ include 'helper.php';
  * Step 3: Instantiate our Router application and add routes to it.
  *
  */
+
 $router = new Router;
-include 'routes_v1.php';
- 
+require 'router_routes_v0.php';
+
 /**
- * Step 3: Run the application.
+ * Step 4: Run the application.
  *
  * This method should be called last. This executes the Router application
  * and returns the HTTP response to the HTTP client.
  */
-echo $router($router->method(), $router->uri());
+
+try {
+    // execute the received method and output the result
+    echo $router($router->method(), $router->uri());
+}
+catch (HttpException $e) {
+    // checking for application exceptions/errors and output it as result
+    $e->getResponse();
+}

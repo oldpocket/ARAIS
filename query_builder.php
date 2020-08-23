@@ -4,7 +4,7 @@
 // REFLECTION https://catchmetech.com/en/post/94/how-to-create-an-orm-framework-in-pure-php-orm-creation-tutorial
 // DYNAMIC OBJ https://stackoverflow.com/questions/14395631/php-create-object-without-class
 
-require 'db_connection.php';
+require 'query_db_abstraction.php';
 
 /**
 * Class QueryBuilder
@@ -29,7 +29,7 @@ require 'db_connection.php';
 * @method QueryBuilder having (array $having)
 * @method QueryBuilder limit (array $join)
 */
-class QueryBuilder extends DBConnection
+class QueryBuilder extends QueryDBAbstraction
 {
     /** @var array The list of clausules to be used in the query */
     private $clausules = [];

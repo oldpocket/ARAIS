@@ -155,13 +155,13 @@ class Router {
     * @return mixed|null
     */
     public function run($method, $uri) {
+        
         $method = strtolower($method);
         if (!isset($this->routes[$method])) {
             return null;
         }
-
+        
         foreach ($this->routes[$method] as $route => $callback) {
-
             if (preg_match($route, $uri, $parameters)) {
                 array_shift($parameters);
                 header('Content-Type: application/json');

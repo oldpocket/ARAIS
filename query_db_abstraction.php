@@ -1,7 +1,5 @@
 <?php
 
-use \Exception;
-
 /**
 * Class DBConnection 
 * 
@@ -16,7 +14,7 @@ use \Exception;
 * @version     0.5.0
 * @package     ARAIS
 */
-class DBConnection
+class QueryDBAbstraction
 {
     /**
     * @var DB
@@ -32,8 +30,8 @@ class DBConnection
             
             // Create a new database, if the file doesn't exist and open it for reading/writing.
             // The extension of the file is arbitrary.
-            $this->db = new SQLite3('iot.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
-
+            $this->db = new SQLite3('data.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+/*
             // ToDo : load external SQL file with all SQL create statements
             $this->db->query('CREATE TABLE IF NOT EXISTS "data" (
                             "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -41,7 +39,7 @@ class DBConnection
                             "sensor_uid" VARCHAR,
                             "value" INTEGER,
                             "timestamp" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
-            )');
+            )'); */
         }
         return $this->db;
     }
@@ -91,7 +89,7 @@ class DBConnection
         $result['request_date'] = date("Y-m-d H:i:s");
         $result['values'] = $resultArray;
         
-        return $result;
+        return json_decode(json_encode($result));
     }
 
     /**
