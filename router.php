@@ -167,7 +167,7 @@ class Router {
             if (preg_match($route, $uri, $parameters)) {
                 array_shift($parameters);
                 header('Content-Type: application/json');
-                echo ($uri);
+                
                 return json_encode($this->call($callback, $parameters));
             }
         }
