@@ -18,6 +18,12 @@
  */
 class JWTHelper
 {
+	private $tokenFactory = null;
+
+    public function registerTokenFactory($callback) {
+        $this->tokenFactory = $callback;
+    }
+
 	/**
 	 * Decodes a JWT string into a PHP object.
 	 *
@@ -50,6 +56,13 @@ class JWTHelper
 			if (empty($header->alg)) {
 				throw new DomainException('Empty algorithm');
 			}
+
+			// If key is null, need to use a registered tokenFactory
+			if ($key == null && is_callable($this->tokenFactory)) {
+				$key = call_user_func_array($callback, array($header->kid));
+			}
+			if ($key == null) throw new UnexpectedValueException('No given key to check signature');
+
 			if ($sig != JWTHelper::sign("$headb64.$bodyb64", $key, $header->alg)) {
 				throw new UnexpectedValueException('Signature verification failed');
 			}
@@ -69,9 +82,9 @@ class JWTHelper
 	 * @uses jsonEncode
 	 * @uses urlsafeB64Encode
 	 */
-	public static function encode($payload, $key, $algo = 'HS256')
+	public static function encode($payload, $key, $kid, $algo = 'HS256')
 	{
-		$header = array('typ' => 'JWT', 'alg' => $algo);
+		$header = array('typ' => 'JWT', 'kid' => $kid, 'alg' => $algo);
 
 		$segments = array();
 		$segments[] = JWTHelper::urlsafeB64Encode(JWTHelper::jsonEncode($header));

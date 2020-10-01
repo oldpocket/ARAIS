@@ -41,6 +41,82 @@ include 'helper.php';
  */
 try {
     $router = new Router;
+
+    // A middlware to perform JwtAuthorization
+    $router->addMiddleware('JwtAuthorization', function() use ($router) {
+        
+        // 'auth' URL use Basic HTTP Auth, so let's skip
+        $uri = $router->uri();
+        if ($uri == 'auth' || $uri == 'cron') return;
+
+        $headers = null;
+        if (isset($_SERVER['Authorization'])) {
+            $headers = trim($_SERVER["Authorization"]);
+        }
+        else if (isset($_SERVER['HTTP_AUTHORIZATION'])) {    //Nginx or fast CGI
+            $headers = trim($_SERVER["HTTP_AUTHORIZATION"]);
+        } elseif (function_exists('apache_request_headers')) {
+            $requestHeaders = apache_request_headers();
+            // Server-side fix for bug in old Android versions (a nice 
+            // side-effect of this fix means we don't care about capitalization 
+            // for Authorization)
+            $requestHeaders = array_combine(
+                array_map('ucwords', 
+                array_keys($requestHeaders)), 
+                array_values($requestHeaders));
+
+            if (isset($requestHeaders['Authorization'])) {
+                $headers = trim($requestHeaders['Authorization']);
+            }
+        }
+        // HEADER: Get the access token from the header
+        $token = null;
+        if (!empty($headers)) {
+            if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
+                $token = $matches[1];
+            }
+        }
+
+        if ($token == null) throw new HttpException(401, "No JWT token found");
+
+        // Decode JWT token here
+        $jwt = JWTHelper::decode($token, null, true);
+        // decode token
+
+        // Retriving route details from database
+        $routes = $qb
+            ->table('routes')
+            ->fields(['id'])
+            ->where(["route = '$uri'"])
+            ->select();
+        // Each user must have just one token
+        if (count($routes->values) != 1) 
+            throw new HttpException(400, "Error finding the route parameters");
+
+        $route = $routes->values[0];
+
+        // Checking the route against the list of allowed routes
+        if ( ! in_array($route->id, $jwt->allowed_routes )) {
+            // user doesn't have access to it
+            throw new HttpException(403, 'You are not allowed to call this route');
+        }
+    });
+    
+    $router->registerTokenFactory(function($kid) use ($router) {
+        // Retriving route details from database
+        $tokens = $qb
+            ->table('tokens')
+            ->fields(['secret'])
+            ->where(["id = '$kid'"])
+            ->select();
+        // Each user must have just one token
+        if (count($tokens->values) != 1) 
+            throw new HttpException(400, "Error finding the user`s token");
+        
+        return $tokens->values[0]->secret;
+
+    });
+
     require 'router_routes_v0.php';
 
     /**

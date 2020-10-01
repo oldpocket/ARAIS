@@ -27,7 +27,9 @@ class Router {
     
     /** @var string $body Contains the request body if avaliable */
     public $body = '';
-                
+
+    private $middlewares = array();
+
     /**
      * Check the content-type of the request. It must by of type application/json
      * 
@@ -117,6 +119,10 @@ class Router {
         return $uri;
     }
 
+    public function addMiddleware($name, $callback) {
+        $this->middlewares[$name] = $callback;
+    }
+
     /**
     * @param $method The HTTP verb
     * @param $path The URI that is being called
@@ -163,11 +169,13 @@ class Router {
             return null;
         }
         
+        foreach ($this->middlewares as $middleware => $callback)
+            $this->call($callback, array());
+
         foreach ($this->routes[$method] as $route => $callback) {
             if (preg_match($route, $uri, $parameters)) {
                 array_shift($parameters);
                 header('Content-Type: application/json');
-                echo ($uri);
                 return json_encode($this->call($callback, $parameters));
             }
         }

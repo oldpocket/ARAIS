@@ -55,7 +55,7 @@ $router
         );
 
         // ($payload, $secret, algorithm)
-        $jwt = JWTHelper::encode($payload, $token->secret, 'HS256');
+        $jwt = JWTHelper::encode($payload, $token->secret, $token->id,'HS256');
         $result = ['token' => $jwt];
 
         // Returning the JWT
