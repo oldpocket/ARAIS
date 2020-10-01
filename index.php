@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 /**
  * Step 0: Required frameworks and basic setup
