@@ -23,7 +23,7 @@
 class Router {
 
     /** @var array $routes Store all the registered routes for the system */
-    private $routes = [];
+    public $routes = [];
     
     /** @var string $body Contains the request body if avaliable */
     public $body = '';
@@ -177,6 +177,17 @@ class Router {
                 array_shift($parameters);
                 header('Content-Type: application/json');
                 return json_encode($this->call($callback, $parameters));
+            }
+        }
+        return null;
+    }
+
+    public function uriPattern() {
+        $method = $this->method();
+        $uri = $this->uri();
+        foreach ($this->routes[$method] as $route => $callback) {
+            if (preg_match($route, $uri, $parameters)) {
+                return $route;
             }
         }
         return null;

@@ -5,7 +5,7 @@
  * HTTP Auth - Minimalist authentication to return a JWT
  */
 $router
-    ->on('GET', 'auth', function () {
+    ->on('GET', '/auth', function () {
         
         $auth_user = $_SERVER['PHP_AUTH_USER'];
         
@@ -61,7 +61,7 @@ $router
         return $result;
     })
 
-    ->on('GET', 'devices/(\w+)/', function ($device) {
+    ->on('GET', '/devices/(\w+)/', function ($device) {
         
         $qb = new QueryBuilder();
         $r = $qb

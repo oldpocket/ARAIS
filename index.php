@@ -96,22 +96,22 @@ try {
                 $token = $matches[1];
             }
         }
-
         if ($token == null) throw new HttpException(401, "No JWT token found");
 
         // Decode JWT token here
         $jwt = $jwt_helper->decode($token, null, true);
-        // decode token
 
+        // Route pattern to look in the database
+        $uriPattern = $router->uriPattern();
         // Retrieve route details from database
         $qb = new QueryBuilder();
         $routes = $qb
             ->table('routes')
             ->fields(['id'])
-            ->where(["route = '$uri'"])
+            ->where(["route = '$uriPattern'"])
             ->select();
-        // Each user must have just one token
-        echo $router->uri();
+
+        // The pattern should match only one route
         if (count($routes->values) != 1) 
             throw new HttpException(400, "Error finding the route parameters");
 
