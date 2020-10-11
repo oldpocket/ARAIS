@@ -38,7 +38,7 @@ class JWTHelper
 	 * @uses jsonDecode
 	 * @uses urlsafeB64Decode
 	 */
-	public static function decode($jwt, $key = null, $verify = true)
+	public function decode($jwt, $key = null, $verify = true)
 	{
 		$tks = explode('.', $jwt);
 		if (count($tks) != 3) {
@@ -59,7 +59,7 @@ class JWTHelper
 
 			// If key is null, need to use a registered tokenFactory
 			if ($key == null && is_callable($this->tokenFactory)) {
-				$key = call_user_func_array($callback, array($header->kid));
+				$key = call_user_func_array($this->tokenFactory, array($header->kid));
 			}
 			if ($key == null) throw new UnexpectedValueException('No given key to check signature');
 

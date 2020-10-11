@@ -81,6 +81,7 @@ class QueryDBAbstraction
         
         if (!$results) return null;
         
+        $resultArray = array();
         // Get all the row results
         while($entry = $results->fetchArray(SQLITE3_ASSOC)) {
             $resultArray[] = $entry;

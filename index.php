@@ -1,4 +1,4 @@
-    <?php
+<?php
 
 /**
  * Step 0: Required frameworks and basic setup
@@ -11,6 +11,8 @@ require '.env.php';
 require 'http_exception.php';
 // Route handler
 require 'router.php';
+// JWT encode e decode methods
+require 'jwt_helper.php';
 // Basic ORM
 require 'query_builder.php';   
 
@@ -41,13 +43,31 @@ include 'helper.php';
  */
 try {
     $router = new Router;
+    $jwt_helper = new JWTHelper;
+
+    // JWT Helper needs a factory to retrieve the tokens
+    $jwt_helper->registerTokenFactory(function($kid) use ($router) {
+        // Retriving route details from database
+        $qb = new QueryBuilder();
+        $tokens = $qb
+            ->table('tokens')
+            ->fields(['secret'])
+            ->where(["id = '$kid'"])
+            ->select();
+        // Each user must have just one token
+        if (count($tokens->values) != 1) 
+            throw new HttpException(400, "Error finding the user`s token");
+        
+        return $tokens->values[0]->secret;
+
+    });
 
     // A middlware to perform JwtAuthorization
-    $router->addMiddleware('JwtAuthorization', function() use ($router) {
+    $router->addMiddleware('JwtAuthorization', function() use ($router, $jwt_helper) {
         
         // 'auth' URL use Basic HTTP Auth, so let's skip
         $uri = $router->uri();
-        if ($uri == 'auth' || $uri == 'cron') return;
+        if ($uri == '/auth' || $uri == '/cron') return;
 
         $headers = null;
         if (isset($_SERVER['Authorization'])) {
@@ -80,16 +100,18 @@ try {
         if ($token == null) throw new HttpException(401, "No JWT token found");
 
         // Decode JWT token here
-        $jwt = JWTHelper::decode($token, null, true);
+        $jwt = $jwt_helper->decode($token, null, true);
         // decode token
 
-        // Retriving route details from database
+        // Retrieve route details from database
+        $qb = new QueryBuilder();
         $routes = $qb
             ->table('routes')
             ->fields(['id'])
             ->where(["route = '$uri'"])
             ->select();
         // Each user must have just one token
+        echo $router->uri();
         if (count($routes->values) != 1) 
             throw new HttpException(400, "Error finding the route parameters");
 
@@ -102,21 +124,6 @@ try {
         }
     });
     
-    $router->registerTokenFactory(function($kid) use ($router) {
-        // Retriving route details from database
-        $tokens = $qb
-            ->table('tokens')
-            ->fields(['secret'])
-            ->where(["id = '$kid'"])
-            ->select();
-        // Each user must have just one token
-        if (count($tokens->values) != 1) 
-            throw new HttpException(400, "Error finding the user`s token");
-        
-        return $tokens->values[0]->secret;
-
-    });
-
     require 'router_routes_v0.php';
 
     /**

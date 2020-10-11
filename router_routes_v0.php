@@ -1,6 +1,5 @@
 <?php
 
-require 'jwt_helper.php';
 
 /**
  * HTTP Auth - Minimalist authentication to return a JWT
@@ -60,4 +59,16 @@ $router
 
         // Returning the JWT
         return $result;
+    })
+
+    ->on('GET', 'devices/(\w+)/', function ($device) {
+        
+        $qb = new QueryBuilder();
+        $r = $qb
+            ->table('data')
+            ->fields(['sensor_uid', 'timestamp', 'value'])
+            ->where(["device_uid = '$device'"])
+            ->select();
+        return json_encode($r);
+
     });
