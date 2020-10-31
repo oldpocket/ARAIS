@@ -5,6 +5,9 @@
  * HTTP Auth - Minimalist authentication to return a JWT
  */
 $router
+    /**
+     * HTTP Auth - Minimalist authentication to return a JWT
+     */
     ->on('GET', '/auth', function () {
         
         $auth_user = $_SERVER['PHP_AUTH_USER'];

@@ -125,7 +125,8 @@ try {
         }
     });
     
-    require 'router_routes_v0.php';
+    require 'routes_devices.php';
+    require 'routes_sensors.php';
 
     /**
      * Step 4: Run the application.
