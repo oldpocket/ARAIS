@@ -23,7 +23,7 @@
 class Router {
 
     /** @var array $routes Store all the registered routes for the system */
-    public $routes = [];
+    private $routes = [];
     
     /** @var string $body Contains the request body if avaliable */
     public $body = '';
@@ -182,6 +182,11 @@ class Router {
         return null;
     }
 
+    /**
+     * Get the registered regex pattern of the current URI
+     * 
+     * @return string|null The pattern of the URI
+     */
     public function uriPattern() {
         $method = $this->method();
         $uri = $this->uri();

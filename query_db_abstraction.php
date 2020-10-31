@@ -31,7 +31,7 @@ class QueryDBAbstraction
             // Create a new database, if the file doesn't exist and open it for reading/writing.
             // The extension of the file is arbitrary.
             $this->db = new SQLite3('data.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
-/*
+        /*
             // ToDo : load external SQL file with all SQL create statements
             $this->db->query('CREATE TABLE IF NOT EXISTS "data" (
                             "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -100,7 +100,17 @@ class QueryDBAbstraction
     */
     protected final function executeUpdate($sql, array $values)
     {
-        return $this->execute($sql, $values);
+        $statement = $this->statement($sql);
+
+        foreach ($values as $key => $value) {
+            $statement->bindValue($key+1, $value);
+        }
+
+        if ($statement && $statement->execute()) {
+            return $this->connect()->changes();
+        }
+
+        return null;
     }
 
     /**
@@ -110,7 +120,26 @@ class QueryDBAbstraction
     */
     protected final function executeDelete($sql, array $values)
     {
-        return $this->execute($sql, $values);
+        $statement = $this->statement($sql);
+
+        foreach ($values as $key => $value) {
+            $statement->bindValue($key+1, $value);
+        }
+        
+        $results = $statement->execute();
+        
+        if (!$results) return null;
+        
+        $resultArray = array();
+        // Get all the row results
+        while($entry = $results->fetchArray(SQLITE3_ASSOC)) {
+            $resultArray[] = $entry;
+        };
+        
+        $result['request_date'] = date("Y-m-d H:i:s");
+        $result['values'] = $resultArray;
+        
+        return json_decode(json_encode($result));
     }
 
     /**

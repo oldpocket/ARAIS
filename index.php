@@ -101,14 +101,15 @@ try {
         // Decode JWT token here
         $jwt = $jwt_helper->decode($token, null, true);
 
-        // Route pattern to look in the database
+        // Parameters to search for the current route in the DB
         $uriPattern = $router->uriPattern();
+        $uriMethod = strtoupper($router->method());
         // Retrieve route details from database
         $qb = new QueryBuilder();
         $routes = $qb
             ->table('routes')
             ->fields(['id'])
-            ->where(["route = '$uriPattern'"])
+            ->where(["route = '$uriPattern' AND ", "verb = '$uriMethod'"])
             ->select();
 
         // The pattern should match only one route
