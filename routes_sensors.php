@@ -11,17 +11,10 @@ $router
     * Notes: 
     * Output-Formats: [application/json]
     */
-    ->on('GET', '/devices/(\w+)/sensors/', function ($device) {
+    ->on('GET', '/devices/(\w+)/sensors/', function ($deviceUID) {
+      
+        $device_id = Helper::getDeviceID($deviceUID);
         $qb = new QueryBuilder();
-        $r = $qb
-            ->table('devices')
-            ->fields(['id'])
-            ->where(["uid = $device"])
-            ->selectOne();
-        if (count($r->values) == 0) 
-            throw new HttpException(404, "Device not found");
-
-        $device_id = $r->values[0]->id;
         $r = $qb
             ->table('sensors')
             ->fields(['uid', 'label', 'created', 'modified'])

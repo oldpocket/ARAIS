@@ -127,6 +127,7 @@ try {
     
     require 'routes_devices.php';
     require 'routes_sensors.php';
+    require 'routes_data.php';
 
     /**
      * Step 4: Run the application.
