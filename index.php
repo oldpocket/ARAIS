@@ -125,9 +125,11 @@ try {
         }
     });
     
-    require 'routes_devices.php';
-    require 'routes_sensors.php';
-    require 'routes_data.php';
+    require 'routes/routes_devices.php';
+    require 'routes/routes_sensors.php';
+    require 'routes/routes_data.php';
+    require 'routes/routes_users.php';
+    require 'routes/routes_authorization.php';
 
     /**
      * Step 4: Run the application.

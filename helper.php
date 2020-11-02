@@ -5,20 +5,6 @@
  */
 class Helper {
 
-    /**
-     * Get a list of token from the database in the array format
-     * necessary for the JWT midlleware
-     */
-    public static function getTokenSecrets() {
-        $response = R::findAll('tokens');
-        $result = array();
-        foreach ($response as $row)
-        { 
-            $result[$row['id']] = $row['secret'];
-        }
-        return $result;
-    }
-
     /*
      * Get the URL Get Query Parameter or null
      */
@@ -59,14 +45,6 @@ class Helper {
         return $r->values[0]->id;
     }
 
-    /**
-     * Transform a Slim txt body request in a JSON object
-     */
-    public static function textBodytToJSON() {
-        
-    
-    }
-    
     /**
      * Local LOG function
      */
