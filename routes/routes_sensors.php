@@ -37,7 +37,7 @@ $router
             ->table('devices')
             ->fields(['id'])
             ->where(["uid = $device"])
-            ->selectOne();
+            ->select();
         if (count($r->values) == 0) 
             throw new HttpException(404, "Device not found");
 
@@ -46,7 +46,7 @@ $router
             ->table('sensors')
             ->fields(['uid', 'label', 'created', 'modified'])
             ->where(["devices_id = $device_id AND uid = $sensor"])
-            ->selectOne();
+            ->select();
 
         return $r;
       
@@ -64,7 +64,7 @@ $router
             ->table('devices')
             ->fields(['id'])
             ->where(["uid = $device"])
-            ->selectOne();
+            ->select();
         if (count($r->values) == 0) 
             throw new HttpException(404, "Device not found");
 
@@ -109,10 +109,11 @@ $router
             throw new HttpException(409, "Duplicated sensor UID: $sensor, for Device: $device");
 
         // Adding the sensors as has-one relation with the device
+        $now = date('Y-m-d H:i:s');
         $r = $qb
             ->table('sensors')
-            ->fields(['uid', 'label', 'devices_id'])
-            ->insert([$sensor, $data->label, $device_id]);
+            ->fields(['uid', 'label', 'devices_id', 'modified', 'created'])
+            ->insert([$sensor, $data->label, $device_id, $now, $now]);
 
         return $r;
     })
@@ -146,11 +147,12 @@ $router
             throw new HttpException(404, "Sensor not found: $sensor");
 
         // Adding the sensors as has-one relation with the device
+        $now = date('Y-m-d H:i:s');
         $r = $qb
             ->table('sensors')
-            ->fields(['label'])
+            ->fields(['label', 'modified'])
             ->where(["devices_id = $device_id AND uid = $sensor"])
-            ->update([$data->label]);
+            ->update([$data->label, $now]);
 
         return $r;
     });

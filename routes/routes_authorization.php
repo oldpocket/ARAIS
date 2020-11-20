@@ -31,7 +31,7 @@ $router
             ->table('roles')
             ->fields(['uid', 'description'])
             ->where(["id = '$role_id'"])
-            ->selectOne();
+            ->select();
 
         return $role;
 
@@ -63,7 +63,7 @@ $router
             ->table('routes')
             ->fields(['uid', 'description', 'route', 'verb'])
             ->where(["id = '$route_id'"])
-            ->selectOne();
+            ->select();
 
         return $route;
     })

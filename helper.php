@@ -21,7 +21,7 @@ class Helper {
             ->table('devices')
             ->fields(['id'])
             ->where(["uid = $deviceUID"])
-            ->selectOne();
+            ->select();
         if (count($r->values) == 0) 
             throw new HttpException(404, "Device not found");
 
@@ -38,7 +38,7 @@ class Helper {
             ->table('sensors')
             ->fields(['id'])
             ->where(["devices_id = $device_id AND uid = $sensorUID"])
-            ->selectOne();
+            ->select();
         if (count($r->values) == 0) 
             throw new HttpException(404, "Sensor not found");
         

@@ -37,7 +37,7 @@ $router
             ->table('devices')
             ->fields(['uid', 'created', 'label', 'place'])
             ->where(["uid = $device"])
-            ->selectOne();
+            ->select();
         if (count($r->values) == 0) 
             throw new HttpException(404, "Device not found");
 
@@ -83,7 +83,9 @@ $router
             ->table('devices')
             ->fields(['*'])
             ->where(["uid = '$device'"])
-            ->selectOne();
+            ->select();
+        if (count($r->values) == 0) 
+            throw new HttpException(404, "Device not found");
 
         // Device UID was found, lets update it
         $r = $qb
@@ -97,7 +99,7 @@ $router
             ->table('devices')
             ->fields(['label', 'place', 'modified', 'uid', 'last_ip'])
             ->where(["uid = '$device'"])
-            ->selectOne();
+            ->select();
 
         return $r;
 
@@ -128,7 +130,9 @@ $router
             ->table('roles')
             ->fields(['id'])
             ->where(["uid = 'device'"])
-            ->selectOne();
+            ->select();
+        if (count($role->values) == 0) 
+            throw new HttpException(404, "Role not found");
         $role_id = $role->values[0]->id;
 
         // JWT token secret
@@ -140,12 +144,13 @@ $router
                 base64_encode(random_bytes(10)), 
                 password_hash($device_password, PASSWORD_DEFAULT), 
                 $role_id]);
-
+        
+        $now = date('Y-m-d H:i:s');
         // Device UID is unique, lets continue
         $device_id = $qb
             ->table('devices')
-            ->fields(['uid', 'label', 'place', 'tokens_id'])
-            ->insert([$device, $data->label, $data->place, $token_id]);
+            ->fields(['uid', 'label', 'place', 'tokens_id', 'created', 'modified'])
+            ->insert([$device, $data->label, $data->place, $token_id, $now, $now]);
 
         $sensor_uids = array(); // used to store a list of sensors uid
         foreach ($data->sensors as $data_sensor) {
@@ -164,8 +169,8 @@ $router
             // Adding the sensors as has-one relation with the device
             $sensor_id = $qb
                 ->table('sensors')
-                ->fields(['uid', 'label', 'devices_id'])
-                ->insert([$data_sensor->uid, $data_sensor->label, $device_id]);
+                ->fields(['uid', 'label', 'devices_id', 'modified', 'created'])
+                ->insert([$data_sensor->uid, $data_sensor->label, $device_id, $now, $now]);
         }
         
         // Returning the created device
@@ -173,7 +178,7 @@ $router
             ->table('devices')
             ->fields(['label', 'place', 'created', 'modified', 'uid'])
             ->where(["id = $device_id"])
-            ->selectOne();
+            ->select();
         $device->values[0]->password = $device_password;
 
         return $device;

@@ -96,13 +96,15 @@ $router
             ->table('tokens')
             ->fields(['id'])
             ->where(["username = '$username'"])
-            ->selectOne();
+            ->select();
+        if (count($token->values) == 0) 
+            throw new HttpException(404, "Username not found");            
         $token_id = $token->values[0]->id;
         $user = $qb
             ->table('users')
             ->fields(['name', 'email'])
             ->where(["tokens_id = $token_id"])
-            ->selectOne();
+            ->select();
 
         return $user;
     })
@@ -134,7 +136,7 @@ $router
             ->table('roles')
             ->fields(['id'])
             ->where(["uid = '$role_uid'"])
-            ->selectOne();
+            ->select();
         if (count($role->values) == 0)
             throw new HttpException(404, "Role not found: $role_uid");
         $role_id = $role->values[0]->id;
@@ -158,7 +160,7 @@ $router
             ->table('users')
             ->fields(['name', 'email'])
             ->where(["id = $user_id"])
-            ->selectOne();
+            ->select();
         return $user;
 
     })
@@ -176,7 +178,7 @@ $router
             ->table('tokens')
             ->fields(['id'])
             ->where(["username = '$username'"])
-            ->selectOne();
+            ->select();
         if (count($token->values) == 0)
             throw new HttpException(404, "Username not in the system: $username");
 
@@ -193,7 +195,7 @@ $router
             ->table('users')
             ->fields(['name', 'email'])
             ->where(["tokens_id = $token_id"])
-            ->selectOne();
+            ->select();
         return $user;
 
     })
@@ -211,7 +213,7 @@ $router
             ->table('tokens')
             ->fields(['id', 'password'])
             ->where(["username = '$username'"])
-            ->selectOne();
+            ->select();
         if (count($token->values) == 0)
             throw new HttpException(404, "Username not in the system: $username");
         
