@@ -19,7 +19,9 @@ One can find many IoT servers in the internet, huge and complex open sources pro
 So I decide to start this project.
 
 ## Installation ##
-Quite straight forward. Get the code, execute ```composer.phar install```, update the environment variables from the next section with ones that make sense for your setup and apply the database.sql dump in your Mysql.
+Quite straight forward. Get the code, copy it to your webserver, update the environment variables from the next section with ones that make sense for your setup and using the ```database.sql``` dump from the repository create a SQLite file called ```data.sqlite```.
+
+The database requirements is quite simple, so it's possible to port for a MySQL database. I have added some env variables in the next section. Small changes in the query db abstraction class will be necessary, but anyone with some PHP background should handle it.
 
 If you find any difficuties, let me know and we can update this document with more steps.
 
@@ -31,23 +33,17 @@ Please, be aware that index.php have a line requering .env.php. If you decide to
 The ideia behind this env vars is to separe the information that change in differents environment where you run your application (e.g. your localmachine vs your production server).
 
 ```php
-// Basic Database vars used by connection string
-putenv('MYSQL_HOST=[my_arais_mysql_server]:[port]'); // Database Server Host
-putenv('MYSQL_DB=[my_arais_db]');       // Database Name
-putenv('MYSQL_USER=[my_db_user]');           // Database Username
-putenv('MYSQL_PASSWD=[my_db_passwd]');         // Database Password
+// MySQL env example
+// putenv('MYSQL_HOST=[my_arais_mysql_server]:[port]'); // Database Server Host
+// putenv('MYSQL_DB=[my_arais_db]');       // Database Name
+// putenv('MYSQL_USER=[my_db_user]');           // Database Username
+// putenv('MYSQL_PASSWD=[my_db_passwd]');         // Database Password
 
 // Time Zone of the application
 putenv('APP_TIME_ZONE=America/Sao_Paulo');
 
 // LOGGING INFORMATION
-// SLIM
-putenv('SLIM_DEBUG=1');
-putenv('SLIM_LOG_ENABLED=1');
 // PHP
 putenv('PHP_ERROR_REPORTING=E_ALL');
 putenv('PHP_DISPLAY_ERROS=1');
-
-// 1 (True) or 0 (False) to use https
-putenv('ENABLE_HTTPS=0');
 ```
