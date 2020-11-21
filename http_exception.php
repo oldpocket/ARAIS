@@ -166,11 +166,13 @@ class HttpException extends \Exception
         // set output as JSON
         header('Content-type:application/json');
         // write the error body output
+        $body = $this->getBody();
+        
         echo json_encode(array(
             'error' => array(
                 'code' => $this->getCode(),
                 'message' => $this->getMessage(),
-                'details' => $this->getBody()
+                'details' => empty($body) ? $this->status[$this->getCode()] : $body
             )
         ));  
         exit();
