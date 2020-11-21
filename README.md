@@ -2,13 +2,15 @@
 ARAIS is a Recursive Acronym for an IoT Server
 
 ## What it is ##
-Welcome to ARAIS. ARAIS is an IoT server, written in PHP, using a very small list of dependences. It use MySQL for data storage and provide a very clean REST collection of APIs, to make it easy to be consumed by small IoT devices.
+Welcome to ARAIS. ARAIS is an IoT server, written in PHP, using no dependences at all. Everything it needs is part of the code. It use SQLite for data storage and provide a very clean REST collection of APIs, to make it easy to be consumed by small IoT devices.
 
 The collection of APIs can handle device and sensors registration, save and retrieve data from sensors and also the users and permissions management.
 
 It use JWT to garatee the data integrity, and provide authentication and authorization compoenents as well.
 
 The goal of this project is not to replace complex IoT servers already in the market, but provide a lightweight solution for the hobbist that have some knowledge and skills as a PHP developer.
+
+The final result is so simple and light that I can run it inside my NAS server at home using PHP 5.5 and Lighttpd webserver or in a free hosting server with Apache and lots the restricions (I run it at AwardSpace with a free account).
 
 ## Motivation ##
 
@@ -21,7 +23,7 @@ So I decide to start this project.
 ## Installation ##
 Quite straight forward. Get the code, copy it to your webserver, update the environment variables from the next section with ones that make sense for your setup and using the ```database.sql``` dump from the repository create a SQLite file called ```data.sqlite```.
 
-The database requirements is quite simple, so it's possible to port for a MySQL database. I have added some env variables in the next section. Small changes in the query db abstraction class will be necessary, but anyone with some PHP background should handle it.
+The database requirements is quite simple, so it's possible to port to a MySQL database. I have added some env variables in the next section. Small changes in the query db abstraction class will be necessary, but anyone with some PHP background should handle it.
 
 If you find any difficuties, let me know and we can update this document with more steps.
 
