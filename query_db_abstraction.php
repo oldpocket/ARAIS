@@ -126,20 +126,11 @@ class QueryDBAbstraction
             $statement->bindValue($key+1, $value);
         }
         
-        $results = $statement->execute();
+        if ($statement && $statement->execute()) {
+            return $this->connect()->changes();
+        }
         
-        if (!$results) return null;
-        
-        $resultArray = array();
-        // Get all the row results
-        while($entry = $results->fetchArray(SQLITE3_ASSOC)) {
-            $resultArray[] = $entry;
-        };
-        
-        $result['request_date'] = date("Y-m-d H:i:s");
-        $result['values'] = $resultArray;
-        
-        return json_decode(json_encode($result));
+        return null;
     }
 
     /**

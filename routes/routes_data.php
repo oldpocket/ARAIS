@@ -11,7 +11,7 @@ $router
     * Notes: 
     * Output-Formats: [application/json]
     */
-    ->on('POST', '/devices/(\w+)/sensors/(\w+)/data/', function ($deviceUID, $sensorUID) use ($router) {
+    ->on('POST', '/devices/(\w+)/sensors/(\w+)/data', function ($deviceUID, $sensorUID) use ($router) {
         
         $data = $router->body;
 
@@ -27,7 +27,7 @@ $router
             ++$count;
         }
         
-        return array('itensIncluded' => $count);
+        return array('included' => $count);
 
     })
 
@@ -73,5 +73,5 @@ $router
             ->table('data')
             ->where(["sensors_id = $sensor_id AND timestamp >= '$from' AND timestamp < '$to'"])
             ->delete([$sensor_id, $from, $to]);
-        return $r;
+        return array('deleted' => $r);
     });
