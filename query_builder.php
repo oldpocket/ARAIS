@@ -89,21 +89,6 @@ class QueryBuilder extends QueryDBAbstraction
     * @param $values
     * @return string
     */
-    public function selectOne($values = [])
-    {
-        $r = $this->select($values);
-        if (count($r->values) == 0) 
-            throw new HttpException(404, "Record not found");
-        if (count($r->values) > 1)
-            throw new HttpException(409, "Duplicate record found");
-
-        return $r;
-    }
-
-    /**
-    * @param $values
-    * @return string
-    */
     public function select($values = [])
     {
         // recupera o nome da tabela

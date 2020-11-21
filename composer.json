@@ -1,0 +1,16 @@
+{
+    "name": "oldpocket/arais",
+    "type": "project",
+    "description": "ARAIS is a simple IoT server for personal use or small projects. It can manage devices and sensors, together with its data. All with JWT tokens to preserve the data integrity. The server provide REST calls, to make it simple for integration and the solution dont have any external dependency. Everything you need with just a feel PHP files.",
+    "keywords": ["iot","server", "devices", "sensors", "arduino", "api", "rest", "jwt"],
+    "homepage": "http://oldpocket.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabio Andreozzi Godoy",
+            "email": "fabio.godoy@oldpocket.com",
+            "homepage": "http://oldpocket.com",
+            "role": "Developer"
+        }
+    ]
+} 
