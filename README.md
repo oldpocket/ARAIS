@@ -35,6 +35,9 @@ Please, be aware that index.php have a line requering .env.php. If you decide to
 The ideia behind this env vars is to separe the information that change in differents environment where you run your application (e.g. your localmachine vs your production server).
 
 ```php
+// SQLite env
+putenv('SQLITE_FILE_NAME=data.sqlite');
+
 // MySQL env example
 // putenv('MYSQL_HOST=[my_arais_mysql_server]:[port]'); // Database Server Host
 // putenv('MYSQL_DB=[my_arais_db]');       // Database Name
