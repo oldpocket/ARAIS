@@ -30,7 +30,7 @@ class QueryDBAbstraction
             
             // Create a new database, if the file doesn't exist and open it for reading/writing.
             // The extension of the file is arbitrary.
-            $this->db = new SQLite3('data.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+            $this->db = new SQLite3(getenv('SQLLITE_FILE_NAME'), SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
         /*
             // ToDo : load external SQL file with all SQL create statements
             $this->db->query('CREATE TABLE IF NOT EXISTS "data" (
