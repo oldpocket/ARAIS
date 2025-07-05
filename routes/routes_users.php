@@ -2,12 +2,13 @@
 
 
 /**
- * HTTP Auth - Minimalist authentication to return a JWT
+ * Routes to manage users in the system.
  */
 $router
 
     /**
-     * HTTP Auth - Minimalist authentication to return a JWT
+     * Authenticate a user or a device (both are actualy a Token for the system)
+     * ToDo: move for a separate file, as it is used for both: users and devices
      */
     ->on('GET', '/auth', function () {
         

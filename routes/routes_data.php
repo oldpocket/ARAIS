@@ -2,7 +2,7 @@
 
 
 /**
- * HTTP Auth - Minimalist authentication to return a JWT
+ * Routes to manage data from devices/sensors
  */
 $router
     /**
@@ -19,7 +19,7 @@ $router
         $qb = new QueryBuilder();
         $count = 0;
         foreach ($data as $item) {
-            // Adding the sensors as has-one relation with the device
+            // Adding the data
             $r = $qb
             ->table('data')
             ->fields(['value', 'timestamp', 'sensors_id'])

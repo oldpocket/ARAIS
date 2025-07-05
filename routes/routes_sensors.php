@@ -2,7 +2,8 @@
 
 
 /**
- * HTTP Auth - Minimalist authentication to return a JWT
+ * Routes to manage sensors. A sensor is part of an IoT device and later send data to
+ * be store.
  */
 $router
     /**
@@ -47,6 +48,8 @@ $router
             ->fields(['uid', 'label', 'created', 'modified'])
             ->where(["devices_id = $device_id AND uid = $sensor"])
             ->select();
+        if (count($r->values) == 0) 
+            throw new HttpException(404, "Sensor not found");
 
         return $r;
       

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * HTTP Auth - Minimalist authentication to return a JWT
+ * Routes to manage authorization actions involving roles/rotes and permissions
  */
 $router
 

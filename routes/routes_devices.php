@@ -2,7 +2,8 @@
 
 
 /**
- * HTTP Auth - Minimalist authentication to return a JWT
+ * Routes to manage devices in the system. A device is an IoT hardware that can have
+ * many sensors inside.
  */
 $router
     /**
@@ -125,14 +126,15 @@ $router
         $data = $router->body;
         $device_password = base64_encode(random_bytes(5));
 
-        // Saving the role of the device together with the token
+        // Getting the role for a 'device'. A role for a device is pre-populated in the
+        // seed of the table. Avoid to fix the value here in case I change in the future.
         $role = $qb
             ->table('roles')
             ->fields(['id'])
             ->where(["uid = 'device'"])
             ->select();
         if (count($role->values) == 0) 
-            throw new HttpException(404, "Role not found");
+            throw new HttpException(404, "Role for device not found");
         $role_id = $role->values[0]->id;
 
         // JWT token secret
@@ -146,7 +148,7 @@ $router
                 $role_id]);
         
         $now = date('Y-m-d H:i:s');
-        // Device UID is unique, lets continue
+        // Device UID is unique, lets continue to insert
         $device_id = $qb
             ->table('devices')
             ->fields(['uid', 'label', 'place', 'tokens_id', 'created', 'modified'])
