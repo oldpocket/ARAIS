@@ -76,8 +76,6 @@ $router
             ->table('sensors')
             ->where(["devices_id = $device_id AND uid = $sensor"])
             ->delete([$device]);
-        if (count($r->values) == 0) 
-            throw new HttpException(404, "Sensor not found");
 
         return $r;
 
@@ -97,7 +95,7 @@ $router
             ->table('devices')
             ->fields(['id'])
             ->where(["uid = $device"])
-            ->selectOne();
+            ->select();
         if (count($r->values) == 0) 
             throw new HttpException(404, "Device not found");
 
@@ -118,6 +116,13 @@ $router
             ->fields(['uid', 'label', 'devices_id', 'modified', 'created'])
             ->insert([$sensor, $data->label, $device_id, $now, $now]);
 
+        // Getting the new object and return it
+        $r = $qb
+            ->table('sensors')
+            ->fields(['uid', 'label', 'devices_id', 'modified', 'created'])
+            ->where(["id = '$r'"])
+            ->select();
+
         return $r;
     })
 
@@ -135,7 +140,7 @@ $router
             ->table('devices')
             ->fields(['id'])
             ->where(["uid = $device"])
-            ->selectOne();
+            ->select();
         if (count($r->values) == 0) 
             throw new HttpException(404, "Device not found");
 
@@ -156,6 +161,13 @@ $router
             ->fields(['label', 'modified'])
             ->where(["devices_id = $device_id AND uid = $sensor"])
             ->update([$data->label, $now]);
+
+        // Getting the updated object and return it
+        $r = $qb
+            ->table('sensors')
+            ->fields(['uid', 'label', 'devices_id', 'modified', 'created'])
+            ->where(["uid = '$sensor'"])
+            ->select();
 
         return $r;
     });

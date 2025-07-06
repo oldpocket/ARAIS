@@ -57,10 +57,16 @@ $router
         $qb = new QueryBuilder();
         $r = $qb
             ->table('devices')
-            ->where(['uid = $device'])
-            ->delete([$device]);
+            ->fields(['id'])
+            ->where(["uid = $device"])
+            ->select();
         if (count($r->values) == 0) 
             throw new HttpException(404, "Device not found");
+        
+        $r = $qb
+            ->table('devices')
+            ->where(['uid = $device'])
+            ->delete([$device]);
 
         return $r;
 
