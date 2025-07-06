@@ -7,9 +7,15 @@
 $router
 
     /**
-     * Authenticate a user or a device (both are actualy a Token for the system)
-     * ToDo: move for a separate file, as it is used for both: users and devices
-     */
+    * Get auth
+    * Summary: Authenticate a user or a device (both are actualy a Token for the system)
+    * Notes: Is the only rote that is not blocked by the JWT autorization, otherwise
+    *        no one can authenticate in the system.
+    * Output-Formats: [application/json]
+    *
+    * ToDo: Move for a separate file, as it is used for both: users and devices
+    *
+    */
     ->on('GET', '/auth', function () {
         
         $auth_user = $_SERVER['PHP_AUTH_USER'];
@@ -75,7 +81,7 @@ $router
 
     /**
     * Get usersGet
-    * Summary: Create a new user in the system
+    * Summary: Get a list of users of the system
     * Notes: 
     * Output-Formats: [application/json]
     */

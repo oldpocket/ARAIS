@@ -99,5 +99,5 @@ $router
             ->fields(['routes_id', 'roles_id'])
             ->insert([$route_id, $role_id]);
 
-        return $roles_routes_id;
+		return array('included' => 1);
     });

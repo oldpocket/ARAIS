@@ -47,7 +47,7 @@ class QueryDBAbstraction
     /**
     * @param string $sql
     * @param array $values
-    * @return string
+    * @return string with the id of the last inserted row
     */
     protected final function executeInsert($sql, array $values)
     {
@@ -67,7 +67,7 @@ class QueryDBAbstraction
     /**
     * @param string $sql
     * @param array $values
-    * @return array
+    * @return array with the found rows
     */
     protected final function executeSelect($sql, array $values)
     {
@@ -96,7 +96,7 @@ class QueryDBAbstraction
     /**
     * @param string $sql
     * @param array $values
-    * @return int
+    * @return int with the number of rows affected
     */
     protected final function executeUpdate($sql, array $values)
     {
@@ -116,7 +116,7 @@ class QueryDBAbstraction
     /**
     * @param string $sql
     * @param array $values
-    * @return int
+    * @return int with the number of rows deleted
     */
     protected final function executeDelete($sql, array $values)
     {

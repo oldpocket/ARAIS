@@ -49,12 +49,12 @@ class Helper {
      * Local LOG function
      */
     public static function log($message) {
-        try {
-            $log = R::dispense('log');
-            $log->timestamp = date('Y-m-d H:i:s');
-            $log->calling = self::getCallingFunctionName(2);
-            $log->message = $message;
-            R::store($log);
+        try {        
+			$qb = new QueryBuilder();
+			$r = $qb
+				->table('log')
+				->fields(['timestamp', 'calling', 'message'])
+				->insert([date('Y-m-d H:i:s'), self::getCallingFunctionName(2), $message]);        
         } catch (Exception $e) {
             $data = $message.PHP_EOL;
             $fp = fopen('exception_log.txt', 'a');
