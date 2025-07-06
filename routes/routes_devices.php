@@ -68,7 +68,7 @@ $router
             ->where(['uid = $device'])
             ->delete([$device]);
 
-        return $r;
+        return array('deleted' => $r);
 
     })
 
@@ -101,14 +101,7 @@ $router
             ->where(["uid = '$device'"])
             ->update([$data->label, $data->place, $data->last_ip, $now]);
 
-        // Getting the new object and return it
-        $r = $qb
-            ->table('devices')
-            ->fields(['label', 'place', 'modified', 'uid', 'last_ip'])
-            ->where(["uid = '$device'"])
-            ->select();
-
-        return $r;
+        return array('updated' => $r);
 
     })
     

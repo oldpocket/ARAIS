@@ -99,7 +99,11 @@ try {
         if ($token == null) throw new HttpException(401, "No JWT token found");
 
         // Decode JWT token here
-        $jwt = $jwt_helper->decode($token, null, true);
+        try {
+        	$jwt = $jwt_helper->decode($token, null, true);
+        } catch (Exception $e) {
+        	throw new HttpException(401, $e->getMessage());
+        }
 
         // Parameters to search for the current route in the DB
         $uriPattern = $router->uriPattern();

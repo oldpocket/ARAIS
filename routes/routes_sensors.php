@@ -77,7 +77,7 @@ $router
             ->where(["devices_id = $device_id AND uid = $sensor"])
             ->delete([$device]);
 
-        return $r;
+        return array('deleted' => $r);
 
     })
 
@@ -162,12 +162,5 @@ $router
             ->where(["devices_id = $device_id AND uid = $sensor"])
             ->update([$data->label, $now]);
 
-        // Getting the updated object and return it
-        $r = $qb
-            ->table('sensors')
-            ->fields(['uid', 'label', 'devices_id', 'modified', 'created'])
-            ->where(["uid = '$sensor'"])
-            ->select();
-
-        return $r;
+		return array('updated' => $r);
     });

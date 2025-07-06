@@ -62,8 +62,12 @@ $router
         );
 
         // ($payload, $secret, algorithm)
-        $jwt = JWTHelper::encode($payload, $token->secret, $token->id,'HS256');
-        $result = ['token' => $jwt];
+        try {
+	        $jwt = JWTHelper::encode($payload, $token->secret, $token->id,'HS256');
+    	    $result = ['token' => $jwt];
+    	} catch (Exception $e) {
+    		throw new HttpException(400, $e->getMessage());
+    	}
 
         // Returning the JWT
         return $result;
@@ -191,13 +195,8 @@ $router
             ->fields(['name', 'email'])
             ->where(["tokens_id = $token_id"])
             ->update([$data->name, $data->email]);
-        
-        $user = $qb
-            ->table('users')
-            ->fields(['name', 'email'])
-            ->where(["tokens_id = $token_id"])
-            ->select();
-        return $user;
+            
+		return array('updated' => $r);
 
     })
     
@@ -230,6 +229,6 @@ $router
             ->where(["id = $token_id"])
             ->update([password_hash($data->new_password, PASSWORD_DEFAULT)]);
 
-        return array("Ok");
+        return array('updated' => $r);
     })
     ;
